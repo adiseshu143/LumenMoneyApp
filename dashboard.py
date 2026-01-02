@@ -9,7 +9,7 @@ import hashlib
 # Load environment variables
 load_dotenv()
 
-st.set_page_config(page_title="Lumen Money", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Lumen Money", layout="wide", initial_sidebar_state="expanded")
 
 # Initialize session state
 if 'current_page' not in st.session_state:
@@ -321,21 +321,28 @@ st.markdown("""
     
     .page-title {
         color: #FFFFFF;
-        font-size: 36px;
-        font-weight: 800;
-        margin-bottom: 8px;
-        letter-spacing: -0.03em;
-        text-shadow: 0 2px 8px rgba(124, 110, 246, 0.3);
-        background: linear-gradient(135deg, #FFFFFF 0%, #E0DDFF 100%);
+        font-size: 42px;
+        font-weight: 900;
+        margin-bottom: 12px;
+        letter-spacing: -0.04em;
+        text-shadow: 0 4px 16px rgba(124, 110, 246, 0.5);
+        background: linear-gradient(135deg, #FFFFFF 0%, #A89FF7 50%, #7C6EF6 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+        animation: titleGlow 3s ease-in-out infinite;
+    }
+    
+    @keyframes titleGlow {
+        0%, 100% { text-shadow: 0 4px 16px rgba(124, 110, 246, 0.5); }
+        50% { text-shadow: 0 4px 24px rgba(124, 110, 246, 0.8); }
     }
     
     .page-subtitle {
         color: #9CA3AF;
-        font-size: 15px;
-        font-weight: 400;
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 0.01em;
     }
     
     .top-actions {
@@ -345,23 +352,41 @@ st.markdown("""
     }
     
     .btn-secondary {
-        background: #FFFFFF;
-        border: 1px solid #E5E7EB;
-        border-radius: 10px;
-        padding: 12px 20px;
-        color: #000000;
-        font-size: 14px;
+        background: linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%);
+        border: 2px solid #E5E7EB;
+        border-radius: 12px;
+        padding: 14px 28px;
+        color: #1F2937;
+        font-size: 15px;
         font-weight: 700;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        position: relative;
+        overflow: hidden;
     }
+    
+    .btn-secondary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(124, 110, 246, 0.1), transparent);
+        transition: left 0.6s;
+    }
+    
+    .btn-secondary:hover::before {
+        left: 100%;
+    }
+    
     .btn-secondary:hover {
-        background: #F9FAFB;
+        background: linear-gradient(135deg, #F9FAFB 0%, #FFFFFF 100%);
         border-color: #7C6EF6;
         color: #7C6EF6;
-        box-shadow: 0 6px 20px rgba(124, 110, 246, 0.3);
-        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(124, 110, 246, 0.3);
+        transform: translateY(-3px);
     }
     
     /* Icon button styling */
@@ -410,13 +435,13 @@ st.markdown("""
     .btn-primary {
         background: linear-gradient(135deg, #7C6EF6 0%, #5a3fa8 100%);
         border: none;
-        border-radius: 10px;
-        padding: 12px 24px;
+        border-radius: 12px;
+        padding: 14px 32px;
         color: #FFFFFF;
-        font-size: 14px;
+        font-size: 15px;
         font-weight: 800;
         cursor: pointer;
-        box-shadow: 0 8px 24px rgba(124, 110, 246, 0.4);
+        box-shadow: 0 8px 24px rgba(124, 110, 246, 0.5), 0 0 40px rgba(124, 110, 246, 0.2);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
@@ -439,8 +464,8 @@ st.markdown("""
     
     .btn-primary:hover {
         background: linear-gradient(135deg, #6B5ED6 0%, #4a2f98 100%);
-        box-shadow: 0 12px 32px rgba(124, 110, 246, 0.5);
-        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(124, 110, 246, 0.6), 0 0 50px rgba(124, 110, 246, 0.3);
+        transform: translateY(-3px) scale(1.02);
     }
     
     .btn-primary:active {
@@ -479,11 +504,11 @@ st.markdown("""
     }
     
     .profile-header {
-        background: var(--card);
+        background: linear-gradient(135deg, #111827 0%, #1F2937 100%);
         border-radius: 20px;
-        border: 1px solid var(--border);
+        border: 2px solid #3B82F6;
         padding: 40px;
-        box-shadow: 0 8px 24px rgba(124, 110, 246, 0.12);
+        box-shadow: 0 0 30px rgba(59, 130, 246, 0.25), 0 8px 24px rgba(0, 0, 0, 0.4);
         margin-bottom: 24px;
         text-align: center;
         transition: all 0.3s ease;
@@ -491,13 +516,13 @@ st.markdown("""
     
     .profile-header:hover {
         transform: translateY(-4px);
-        box-shadow: 0 12px 32px rgba(124, 110, 246, 0.2);
+        box-shadow: 0 0 40px rgba(59, 130, 246, 0.4), 0 12px 32px rgba(0, 0, 0, 0.5);
     }
     
     .profile-avatar-large {
         width: 120px;
         height: 120px;
-        background: linear-gradient(135deg, #7C6EF6 0%, #A89FF7 100%);
+        background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
         border-radius: 50%;
         margin: 0 auto 20px;
         display: flex;
@@ -506,7 +531,8 @@ st.markdown("""
         font-size: 48px;
         font-weight: 700;
         color: white;
-        box-shadow: 0 8px 24px rgba(124, 110, 246, 0.3);
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.5), 0 8px 24px rgba(0, 0, 0, 0.3);
+        border: 3px solid rgba(255, 255, 255, 0.15);
     }
     
     .profile-name {
@@ -514,12 +540,14 @@ st.markdown("""
         font-size: 28px;
         font-weight: 700;
         margin-bottom: 4px;
+        letter-spacing: -0.5px;
     }
     
     .profile-email {
-        color: var(--text-muted);
+        color: #60A5FA;
         font-size: 14px;
         margin-bottom: 20px;
+        font-weight: 500;
     }
     
     .profile-stats {
@@ -528,45 +556,57 @@ st.markdown("""
         gap: 48px;
         margin-top: 24px;
         padding-top: 24px;
-        border-top: 1px solid var(--border);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .profile-stat {
         text-align: center;
+        padding: 12px 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .profile-stat:hover {
+        transform: translateY(-2px);
     }
     
     .profile-stat-value {
-        color: var(--text-strong);
+        color: #3B82F6;
         font-size: 24px;
         font-weight: 700;
         margin-bottom: 4px;
     }
     
     .profile-stat-label {
-        color: var(--text-muted);
+        color: #9CA3AF;
         font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
     }
     
     .profile-section {
-        background: var(--card);
+        background: linear-gradient(135deg, #111827 0%, #1F2937 100%);
         border-radius: 16px;
-        border: 1px solid var(--border);
+        border: 1.5px solid #374151;
         padding: 28px;
-        box-shadow: 0 8px 24px rgba(124, 110, 246, 0.12);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
         margin-bottom: 24px;
         transition: all 0.3s ease;
     }
     
     .profile-section:hover {
         transform: translateY(-4px);
-        box-shadow: 0 12px 32px rgba(124, 110, 246, 0.2);
+        border-color: #3B82F6;
+        box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2), 0 4px 16px rgba(0, 0, 0, 0.4);
     }
     
     .section-title {
         color: var(--text-strong);
         font-size: 18px;
-        font-weight: 600;
+        font-weight: 700;
         margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     
     .profile-field {
@@ -574,7 +614,7 @@ st.markdown("""
         justify-content: space-between;
         align-items: center;
         padding: 16px 0;
-        border-bottom: 1px solid #F3F4F6;
+        border-bottom: 1px solid #374151;
         gap: 16px;
     }
     
@@ -583,23 +623,40 @@ st.markdown("""
     }
     
     .profile-field-label {
-        color: var(--text-muted);
+        color: #9CA3AF;
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
     }
     
     .profile-field-value {
         color: var(--text-strong);
         font-size: 14px;
-        font-weight: 600;
+        font-weight: 700;
+        text-align: right;
     }
     
     .edit-btn {
-        background: transparent;
-        border: 1.5px solid var(--border);
+        background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+        border: none;
         border-radius: 10px;
         padding: 8px 16px;
-        color: var(--primary);
+        color: #FFFFFF;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+    
+    .edit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5);
+        background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+    }
         font-size: 13px;
         font-weight: 700;
         cursor: pointer;
@@ -619,17 +676,17 @@ st.markdown("""
         justify-content: space-between;
         align-items: center;
         padding: 18px;
-        background: #F9FAFB;
+        background: linear-gradient(135deg, #111827 0%, #1F2937 100%);
         border-radius: 12px;
         margin-bottom: 12px;
-        border: 1px solid var(--border);
+        border: 1px solid #374151;
         transition: all 0.3s ease;
     }
     
     .preference-item:hover {
-        background: #F3F4F6;
-        border-color: var(--primary);
-        box-shadow: 0 4px 12px rgba(124, 110, 246, 0.15);
+        background: linear-gradient(135deg, #1F2937 0%, #374151 100%);
+        border-color: #3B82F6;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
     }
     
     .preference-item:last-child {
@@ -639,23 +696,25 @@ st.markdown("""
     .preference-label {
         color: var(--text-strong);
         font-size: 14px;
-        font-weight: 600;
+        font-weight: 700;
     }
     
     .preference-sublabel {
-        color: var(--text-muted);
+        color: #9CA3AF;
         font-size: 12px;
         margin-top: 2px;
+        font-weight: 500;
     }
     
     .toggle-switch {
         width: 44px;
         height: 24px;
-        background: var(--primary);
+        background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
         border-radius: 12px;
         position: relative;
         cursor: pointer;
-        box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), 0 2px 8px rgba(59, 130, 246, 0.3);
+        transition: all 0.3s ease;
     }
     
     .toggle-switch::after {
@@ -668,38 +727,40 @@ st.markdown("""
         top: 2px;
         right: 2px;
         transition: all 0.2s;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
     
     .badge {
         display: inline-block;
-        padding: 6px 14px;
-        border-radius: 16px;
+        padding: 8px 16px;
+        border-radius: 20px;
         font-size: 12px;
         font-weight: 700;
         transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
     }
     
     .badge-premium {
-        background: linear-gradient(135deg, #7C6EF6 0%, #5a3fa8 100%);
+        background: linear-gradient(135deg, #F59E0B 0%, #F97316 100%);
         color: #FFFFFF;
-        box-shadow: 0 4px 12px rgba(124, 110, 246, 0.3);
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
     }
     
     .badge-premium:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(124, 110, 246, 0.4);
+        box-shadow: 0 6px 16px rgba(245, 158, 11, 0.5);
     }
     
     .badge-verified {
-        background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
         color: #FFFFFF;
-        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
     }
     
     .badge-verified:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5);
     }
     
     /* Dot grid background canvas */
@@ -1020,13 +1081,34 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
     
-    st.button("📊 Dashboard", key="nav_dashboard", width="stretch")
-    st.button("💳 Transactions", key="nav_transactions", width="stretch")
-    st.button("👛 Wallet", key="nav_wallet", width="stretch")
-    st.button("🎯 Goals", key="nav_goals", width="stretch")
-    st.button("💰 Budget", key="nav_budget", width="stretch")
-    st.button("📈 Analytics", key="nav_analytics", width="stretch")
-    st.button("⚙️ Settings", key="nav_settings", width="stretch")
+    st.button("📊 Dashboard", key="nav_dashboard", use_container_width=True)
+    if st.session_state.get('nav_dashboard'):
+        st.session_state.current_page = 'dashboard'
+        st.rerun()
+    
+    if st.button("💳 Transactions", key="nav_transactions", use_container_width=True):
+        st.session_state.current_page = 'transactions'
+        st.rerun()
+    
+    if st.button("👛 Wallet", key="nav_wallet", use_container_width=True):
+        st.session_state.current_page = 'wallet'
+        st.rerun()
+    
+    if st.button("🎯 Goals", key="nav_goals", use_container_width=True):
+        st.session_state.current_page = 'goals'
+        st.rerun()
+    
+    if st.button("💰 Budget", key="nav_budget", use_container_width=True):
+        st.session_state.current_page = 'budget'
+        st.rerun()
+    
+    if st.button("📈 Analytics", key="nav_analytics", use_container_width=True):
+        st.session_state.current_page = 'analytics'
+        st.rerun()
+    
+    if st.button("⚙️ Settings", key="nav_settings", use_container_width=True):
+        st.session_state.current_page = 'settings'
+        st.rerun()
     
     st.markdown("<div style='margin-top: 32px;'></div>", unsafe_allow_html=True)
     
@@ -1131,34 +1213,36 @@ st.markdown("""
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
-        border: 2px solid rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(10px);
         vertical-align: middle;
     }
     
     .icon-circle-search {
-        background: linear-gradient(135deg, #7C6EF6 0%, #9D8EFF 100%);
-        box-shadow: 0 4px 16px rgba(124, 110, 246, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.2);
+        background: transparent;
+        border-color: rgba(124, 110, 246, 0.2);
     }
     
     .icon-circle-bell {
-        background: linear-gradient(135deg, #F59E0B 0%, #F97316 100%);
-        box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.2);
+        background: transparent;
+        border-color: rgba(245, 158, 11, 0.2);
     }
     
     .icon-circle:hover {
         transform: translateY(-3px) scale(1.08);
-        border-color: rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
     }
     
     .icon-circle-search:hover {
-        background: linear-gradient(135deg, #8B7FFF 0%, #B3A8FF 100%);
-        box-shadow: 0 8px 24px rgba(124, 110, 246, 0.6), inset 0 1px 3px rgba(255, 255, 255, 0.3);
+        border-color: rgba(124, 110, 246, 0.5);
+        background: rgba(124, 110, 246, 0.1);
     }
     
     .icon-circle-bell:hover {
-        background: linear-gradient(135deg, #FBBF24 0%, #FB923C 100%);
-        box-shadow: 0 8px 24px rgba(245, 158, 11, 0.6), inset 0 1px 3px rgba(255, 255, 255, 0.3);
+        border-color: rgba(245, 158, 11, 0.5);
+        background: rgba(245, 158, 11, 0.1);
     }
     
     .icon-circle .header-icon {
@@ -1169,7 +1253,7 @@ st.markdown("""
     
     .icon-circle:hover .header-icon {
         transform: scale(1.15);
-        filter: drop-shadow(0 4px 10px rgba(255, 255, 255, 0.5));
+        filter: drop-shadow(0 4px 10px rgba(255, 255, 255, 0.3));
     }
     
     /* Notification badge */
@@ -1197,9 +1281,17 @@ st.markdown("""
         }
     }
     
+    /* Hide button container wrapper for profile and logout buttons */
+    div:has(> button[key="profile_btn"]),
+    div:has(> button[key="logout_btn"]),
+    div:has(> button[key="logout_btn_mobile"]) {
+        width: 44px !important;
+        min-width: 44px !important;
+        max-width: 44px !important;
+    }
+    
     button[key="profile_btn"], button[key="logout_btn"], button[key="logout_btn_mobile"] {
-    button[key="profile_btn"], button[key="logout_btn"], button[key="logout_btn_mobile"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        background: transparent !important;
         border-radius: 50% !important;
         width: 44px !important;
         height: 44px !important;
@@ -1208,26 +1300,31 @@ st.markdown("""
         max-width: 44px !important;
         max-height: 44px !important;
         padding: 0 !important;
-        margin: 0 auto !important;
-        border: 2px solid rgba(255, 255, 255, 0.2) !important;
-        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.45) !important;
-        display: flex !important;
+        margin: 0 !important;
+        border: 2px solid rgba(124, 110, 246, 0.2) !important;
+        box-shadow: none !important;
+        display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
         font-size: 20px !important;
         line-height: 1 !important;
+        backdrop-filter: blur(10px) !important;
+        flex-shrink: 0 !important;
+        overflow: hidden !important;
     }
     button[key="logout_btn"], button[key="logout_btn_mobile"] {
-        background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
-        box-shadow: 0 4px 16px rgba(239, 68, 68, 0.45) !important;
+        border-color: rgba(239, 68, 68, 0.2) !important;
     }
     button[key="profile_btn"]:hover, button[key="logout_btn"]:hover, button[key="logout_btn_mobile"]:hover {
         transform: translateY(-3px) scale(1.08) !important;
-        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.6) !important;
-        border-color: rgba(255, 255, 255, 0.4) !important;
+        background: rgba(124, 110, 246, 0.1) !important;
+        border-color: rgba(124, 110, 246, 0.5) !important;
+        box-shadow: 0 4px 16px rgba(124, 110, 246, 0.2) !important;
     }
     button[key="logout_btn"]:hover, button[key="logout_btn_mobile"]:hover {
-        box-shadow: 0 8px 24px rgba(239, 68, 68, 0.6) !important;
+        background: rgba(239, 68, 68, 0.1) !important;
+        border-color: rgba(239, 68, 68, 0.5) !important;
+        box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2) !important;
     }
     button[key="profile_btn"] p, button[key="logout_btn"] p, button[key="logout_btn_mobile"] p {
         margin: 0 !important;
@@ -1251,11 +1348,26 @@ if st.session_state.current_page == 'profile':
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    st.markdown("""
+    # Get user email from session
+    user_email = st.session_state.get('user_email', 'user@example.com')
+    
+    # Extract name from email (before @ symbol) and format it
+    user_name_part = user_email.split('@')[0]
+    # Replace dots and underscores with spaces, capitalize each word
+    user_display_name = user_name_part.replace('.', ' ').replace('_', ' ').title()
+    
+    # Get initials (first letter of each word, max 2)
+    name_parts = user_display_name.split()
+    if len(name_parts) >= 2:
+        user_initials = (name_parts[0][0] + name_parts[1][0]).upper()
+    else:
+        user_initials = user_display_name[:2].upper() if len(user_display_name) >= 2 else user_display_name.upper()
+    
+    st.markdown(f"""
     <div class="profile-header">
-        <div class="profile-avatar-large">AL</div>
-        <div class="profile-name">Adeline Lively</div>
-        <div class="profile-email">adeline.lively@finset.com</div>
+        <div class="profile-avatar-large">{user_initials}</div>
+        <div class="profile-name">{user_display_name}</div>
+        <div class="profile-email">{user_email}</div>
         <div style="display: flex; gap: 8px; justify-content: center; margin-top: 12px;">
             <span class="badge badge-premium">Premium Member</span>
             <span class="badge badge-verified">✓ Verified</span>
@@ -1285,36 +1397,40 @@ if st.session_state.current_page == 'profile':
         col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("""
+        st.markdown(f"""
         <div class="profile-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <span class="section-title">Personal Information</span>
                 <button class="edit-btn">Edit</button>
             </div>
             <div class="profile-field">
-                <span class="profile-field-label">Full Name</span>
-                <span class="profile-field-value">Adeline Lively</span>
+                <span class="profile-field-label">First Name</span>
+                <span class="profile-field-value">{name_parts[0] if name_parts else 'Not Set'}</span>
+            </div>
+            <div class="profile-field">
+                <span class="profile-field-label">Last Name</span>
+                <span class="profile-field-value">{name_parts[1] if len(name_parts) > 1 else 'Not Set'}</span>
             </div>
             <div class="profile-field">
                 <span class="profile-field-label">Email Address</span>
-                <span class="profile-field-value">adeline.lively@finset.com</span>
+                <span class="profile-field-value">{user_email}</span>
             </div>
             <div class="profile-field">
                 <span class="profile-field-label">Phone Number</span>
-                <span class="profile-field-value">+1 (555) 123-4567</span>
+                <span class="profile-field-value">+91 (XXX) XXX-XXXX</span>
             </div>
             <div class="profile-field">
                 <span class="profile-field-label">Date of Birth</span>
-                <span class="profile-field-value">March 15, 1992</span>
+                <span class="profile-field-value">Not Set</span>
             </div>
             <div class="profile-field">
                 <span class="profile-field-label">Location</span>
-                <span class="profile-field-value">San Francisco, CA</span>
+                <span class="profile-field-value">India</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
         
-        st.markdown("""
+        st.markdown(f"""
         <div class="profile-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <span class="section-title">Financial Overview</span>
@@ -1421,16 +1537,24 @@ else:
         action_cols = st.columns(1)
         with action_cols[0]:
             st.markdown("""
-            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap;">
-                <button class="btn-secondary" style="width: 100%; max-width: 280px;">📊 Manage widgets</button>
-                <button class="btn-primary" style="width: 100%; max-width: 240px;">+ Add new widget</button>
+            <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
+                <button class="btn-secondary" style="width: 100%; max-width: 280px;">
+                    <i class="fas fa-th-large" style="margin-right: 8px;"></i>Manage widgets
+                </button>
+                <button class="btn-primary" style="width: 100%; max-width: 280px;">
+                    <i class="fas fa-plus-circle" style="margin-right: 8px;"></i>Add new widget
+                </button>
             </div>
             """, unsafe_allow_html=True)
     else:
         st.markdown("""
-        <div style="display: flex; gap: 12px; justify-content: flex-end; margin-bottom: 24px; width: 100%;">
-            <button class="btn-secondary">📊 Manage widgets</button>
-            <button class="btn-primary">+ Add new widget</button>
+        <div style="display: flex; gap: 16px; justify-content: flex-end; margin-bottom: 32px; width: 100%;">
+            <button class="btn-secondary">
+                <i class="fas fa-th-large" style="margin-right: 10px;"></i>Manage widgets
+            </button>
+            <button class="btn-primary">
+                <i class="fas fa-plus-circle" style="margin-right: 10px;"></i>Add new widget
+            </button>
         </div>
         """, unsafe_allow_html=True)
 
