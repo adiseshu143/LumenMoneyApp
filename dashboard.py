@@ -20,6 +20,8 @@ if 'auth_mode' not in st.session_state:
     st.session_state.auth_mode = 'login'
 if 'users_db' not in st.session_state:
     st.session_state.users_db = {}  # Simple in-memory user database
+if 'user_name' not in st.session_state:
+    st.session_state.user_name = ""
 
 st.markdown("""
 <style>
@@ -885,16 +887,18 @@ def login_user(email, password):
             st.session_state.user = {"email": email, "localId": hash_password(email)[:16]}
             st.session_state.user_email = email
             st.session_state.user_id = hash_password(email)[:16]
+            st.session_state.user_name = st.session_state.user.get("name", "")
             return True, "Login successful!"
         else:
             return False, "Invalid email or password"
     except Exception as e:
         return False, f"Login error: {str(e)}"
 
-def signup_user(email, password):
+def signup_user(email, password, name=""):
     """Sign up new user with simple in-memory database"""
     try:
         email = email.lower().strip()
+        name = name.strip()
         
         # Validate email format
         if '@' not in email or '.' not in email:
@@ -910,9 +914,10 @@ def signup_user(email, password):
         
         # Create new user
         st.session_state.users_db[email] = hash_password(password)
-        st.session_state.user = {"email": email, "localId": hash_password(email)[:16]}
+        st.session_state.user = {"email": email, "localId": hash_password(email)[:16], "name": name}
         st.session_state.user_email = email
         st.session_state.user_id = hash_password(email)[:16]
+        st.session_state.user_name = name
         return True, "Account created successfully!"
     except Exception as e:
         return False, f"Signup error: {str(e)}"
@@ -928,6 +933,37 @@ if st.session_state.user is None:
     # Show login/signup page
     st.markdown("""
     <style>
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+        
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            }
+            50% {
+                box-shadow: 0 15px 50px rgba(124, 110, 246, 0.3);
+            }
+        }
+        
         .auth-container {
             max-width: 450px;
             margin: 80px auto;
@@ -936,20 +972,30 @@ if st.session_state.user is None:
             border-radius: 20px;
             border: 1px solid #333333;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: slideIn 0.5s ease-out;
         }
+        
+        .auth-container.signup-mode {
+            animation: slideIn 0.5s ease-out;
+        }
+        
         .auth-title {
             font-size: 32px;
             font-weight: 700;
             color: #FFFFFF;
             text-align: center;
             margin-bottom: 10px;
+            animation: slideIn 0.6s ease-out 0.1s both;
         }
+        
         .auth-subtitle {
             font-size: 14px;
             color: #9CA3AF;
             text-align: center;
             margin-bottom: 30px;
+            animation: slideIn 0.6s ease-out 0.2s both;
         }
+        
         .auth-input {
             width: 100%;
             padding: 14px 16px;
@@ -959,12 +1005,17 @@ if st.session_state.user is None:
             border-radius: 10px;
             color: #FFFFFF;
             font-size: 15px;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
+            animation: slideIn 0.6s ease-out 0.3s both;
         }
+        
         .auth-input:focus {
             outline: none;
             border-color: #7C6EF6;
+            box-shadow: 0 0 15px rgba(124, 110, 246, 0.3);
+            background: rgba(124, 110, 246, 0.05);
         }
+        
         .auth-button {
             width: 100%;
             padding: 14px;
@@ -975,32 +1026,90 @@ if st.session_state.user is None:
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            animation: slideIn 0.6s ease-out 0.4s both;
         }
+        
         .auth-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(124, 110, 246, 0.4);
+            box-shadow: 0 12px 24px rgba(124, 110, 246, 0.5);
         }
+        
+        .auth-button:active {
+            transform: translateY(0);
+        }
+        
         .auth-toggle {
             text-align: center;
             margin-top: 20px;
             color: #9CA3AF;
             font-size: 14px;
+            animation: slideIn 0.6s ease-out 0.5s both;
         }
-        .auth-toggle-link {
+        
+        .auth-toggle-btn {
+            background: none;
+            border: none;
             color: #7C6EF6;
             cursor: pointer;
             text-decoration: underline;
+            font-size: 14px;
+            padding: 0;
+            transition: all 0.3s ease;
+            font-weight: 600;
         }
+        
+        .auth-toggle-btn:hover {
+            color: #EDEBFE;
+            text-shadow: 0 0 10px rgba(124, 110, 246, 0.5);
+        }
+        
         .stTextInput input {
             background-color: #000000 !important;
             color: #FFFFFF !important;
             border: 1px solid #333333 !important;
             border-radius: 10px !important;
             padding: 14px 16px !important;
+            transition: all 0.3s ease !important;
         }
+        
         .stTextInput input:focus {
             border-color: #7C6EF6 !important;
+            box-shadow: 0 0 15px rgba(124, 110, 246, 0.3) !important;
+        }
+        
+        .auth-mode-indicator {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 30px;
+            animation: slideIn 0.6s ease-out 0.15s both;
+        }
+        
+        .mode-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid #333333;
+        }
+        
+        .mode-badge.active {
+            background: linear-gradient(135deg, #7C6EF6, #9D8EFF);
+            border-color: #7C6EF6;
+            color: white;
+            box-shadow: 0 0 20px rgba(124, 110, 246, 0.4);
+        }
+        
+        .mode-badge.inactive {
+            background: transparent;
+            color: #9CA3AF;
+        }
+        
+        .mode-badge.inactive:hover {
+            color: #FFFFFF;
+            border-color: #7C6EF6;
         }
     </style>
     """, unsafe_allow_html=True)
@@ -1009,16 +1118,33 @@ if st.session_state.user is None:
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
+        # Mode indicator
         st.markdown(f"""
-        <div class="auth-container">
-            <div class="auth-title">{"Welcome Back" if st.session_state.auth_mode == 'login' else "Create Account"}</div>
-            <div class="auth-subtitle">{"Login to continue to LumenMoney" if st.session_state.auth_mode == 'login' else "Sign up to get started with LumenMoney"}</div>
+        <div class="auth-mode-indicator">
+            <div class="mode-badge {'active' if st.session_state.auth_mode == 'login' else 'inactive'}">🔐 Login</div>
+            <div class="mode-badge {'active' if st.session_state.auth_mode == 'signup' else 'inactive'}">✨ Sign Up</div>
         </div>
         """, unsafe_allow_html=True)
         
-        # Email and password inputs
+        st.markdown(f"""
+        <div class="auth-container">
+            <div class="auth-title">{"Welcome Back" if st.session_state.auth_mode == 'login' else "Create Account"}</div>
+            <div class="auth-subtitle">{"Enter your credentials to access your account" if st.session_state.auth_mode == 'login' else "Create a new account to get started with LumenMoney"}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Email input
         email = st.text_input("Email", placeholder="Enter your email", key="auth_email", label_visibility="collapsed")
         st.markdown('<div style="margin-top: -10px;"></div>', unsafe_allow_html=True)
+        
+        # Name input (only for signup)
+        if st.session_state.auth_mode == 'signup':
+            name = st.text_input("Full Name", placeholder="Enter your full name", key="auth_name", label_visibility="collapsed")
+            st.markdown('<div style="margin-top: -10px;"></div>', unsafe_allow_html=True)
+        else:
+            name = ""
+        
+        # Password input
         password = st.text_input("Password", type="password", placeholder="Enter your password", key="auth_password", label_visibility="collapsed")
         st.markdown('<div style="margin-top: 10px;"></div>', unsafe_allow_html=True)
         
@@ -1040,23 +1166,25 @@ if st.session_state.user is None:
                     if len(password) < 6:
                         st.warning("Password should be at least 6 characters")
                     else:
-                        success, message = signup_user(email, password)
+                        success, message = signup_user(email, password, name)
                         if success:
                             st.success(message)
                             st.rerun()
                         else:
                             st.error(message)
                 else:
-                    st.warning("Please enter both email and password")
+                    st.warning("Please enter all required fields")
         
         # Toggle between login and signup
         st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
         if st.session_state.auth_mode == 'login':
-            if st.button("Don't have an account? Sign Up", use_container_width=True):
+            st.markdown("<div style='text-align: center; color: #9CA3AF; font-size: 14px;'>Don't have an account?</div>", unsafe_allow_html=True)
+            if st.button("Create one now", use_container_width=True, key="switch_to_signup"):
                 st.session_state.auth_mode = 'signup'
                 st.rerun()
         else:
-            if st.button("Already have an account? Login", use_container_width=True):
+            st.markdown("<div style='text-align: center; color: #9CA3AF; font-size: 14px;'>Already have an account?</div>", unsafe_allow_html=True)
+            if st.button("Login here", use_container_width=True, key="switch_to_login"):
                 st.session_state.auth_mode = 'login'
                 st.rerun()
     
@@ -1348,16 +1476,23 @@ if st.session_state.current_page == 'profile':
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Get user email from session
+    # Get user email and name from session
     user_email = st.session_state.get('user_email', 'user@example.com')
+    stored_name = st.session_state.get('user_name', '')
     
-    # Extract name from email (before @ symbol) and format it
-    user_name_part = user_email.split('@')[0]
-    # Replace dots and underscores with spaces, capitalize each word
-    user_display_name = user_name_part.replace('.', ' ').replace('_', ' ').title()
+    # Use stored name if available, otherwise extract from email
+    if stored_name:
+        user_display_name = stored_name
+        name_parts = user_display_name.split()
+    else:
+        # Extract name from email (before @ symbol) and format it
+        user_name_part = user_email.split('@')[0]
+        # Replace dots and underscores with spaces, capitalize each word
+        user_display_name = user_name_part.replace('.', ' ').replace('_', ' ').title()
+        # Get initials (first letter of each word, max 2)
+        name_parts = user_display_name.split()
     
     # Get initials (first letter of each word, max 2)
-    name_parts = user_display_name.split()
     if len(name_parts) >= 2:
         user_initials = (name_parts[0][0] + name_parts[1][0]).upper()
     else:
